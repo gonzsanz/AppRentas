@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.apprenta.renta.controller.Modelo303Controller"
+      styleClass="view-container" spacing="20">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <Label text="Modelo 303 (IVA)" styleClass="view-title"/>
+    <Label fx:id="lblTrimestre" text="1º Trimestre 2025 (Ene - Mar)" styleClass="view-subtitle"/>
+
+    <!-- IVA DEVENGADO -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="IVA Devengado (Repercutido)" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Base imponible" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblVentasBase" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <HBox styleClass="summary-row">
+            <Label text="IVA (21%)" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblVentasIva" text="0,00 €" styleClass="amount"/>
+        </HBox>
+    </VBox>
+
+    <!-- IVA DEDUCIBLE -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="IVA Deducible (Soportado)" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Base imponible" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblComprasBase" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <HBox styleClass="summary-row">
+            <Label text="IVA deducible" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblComprasIva" text="0,00 €" styleClass="amount"/>
+        </HBox>
+    </VBox>
+
+    <!-- RESULTADO -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="Resultado" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="IVA a ingresar" HBox.hgrow="ALWAYS" styleClass="label-bold"/>
+            <Label fx:id="lblResultado" text="0,00 €" styleClass="amount-highlight"/>
+        </HBox>
+    </VBox>
+
+    <HBox spacing="12">
+        <Button text="Ver detalle" styleClass="btn-secondary" onAction="#verDetalle"/>
+        <Button text="📊 Exportar a Excel" styleClass="btn-ghost" onAction="#exportarExcel"/>
+    </HBox>
+</VBox>

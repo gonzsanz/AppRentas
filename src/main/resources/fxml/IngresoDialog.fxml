@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.apprenta.renta.controller.IngresoDialogController"
+      spacing="16" prefWidth="400">
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label fx:id="lblTitulo" text="Nuevo ingreso" styleClass="dialog-title"/>
+
+    <GridPane hgap="12" vgap="12">
+        <Label text="Fecha *"        GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="dpFecha"  GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+        <Label text="Nº Factura"          GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtNumFactura"  GridPane.rowIndex="1" GridPane.columnIndex="1" promptText="Opcional"/>
+
+        <Label text="Total *"         GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="txtTotal"   GridPane.rowIndex="2" GridPane.columnIndex="1" promptText="0,00"/>
+
+        <Label text="Cerrado"              GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <CheckBox fx:id="chkCerrado"       GridPane.rowIndex="3" GridPane.columnIndex="1"
+                  text="Día cerrado (sin facturar)"/>
+
+        <columnConstraints>
+            <ColumnConstraints minWidth="120"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+    </GridPane>
+
+    <!-- INFO IVA calculado -->
+    <VBox styleClass="card-info" spacing="6" fx:id="pnlCalculado">
+        <Label text="Calculado automáticamente:" styleClass="label-info-title"/>
+        <HBox spacing="20">
+            <Label text="Base imponible:"/>
+            <Label fx:id="lblBaseCalc" text="0,00 €" styleClass="label-bold"/>
+            <Label text="IVA (21%):"/>
+            <Label fx:id="lblIvaCalc" text="0,00 €" styleClass="label-bold"/>
+        </HBox>
+    </VBox>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-ghost"   onAction="#cancelar"/>
+        <Button text="Guardar"  styleClass="btn-primary" onAction="#guardar"/>
+    </HBox>
+</VBox>

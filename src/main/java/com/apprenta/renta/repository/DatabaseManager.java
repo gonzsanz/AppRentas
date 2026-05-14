@@ -6,9 +6,9 @@ import java.sql.*;
 
 public class DatabaseManager {
 
-    private static final String DB_PATH = "rentaAutonomos.db";
     private static DatabaseManager instance;
     private final Connection connection;
+    private static final String DB_PATH = obtenerRutaDB();
 
     private DatabaseManager() {
         try {
@@ -21,8 +21,11 @@ public class DatabaseManager {
         }
     }
 
-    public static DatabaseManager getInstance() {
-        return instance == null ? new DatabaseManager() : instance;
+    public static synchronized DatabaseManager getInstance() {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
     }
 
     public Connection getConnection() {
@@ -39,5 +42,11 @@ public class DatabaseManager {
                 connection.createStatement().execute(trimmed);
             }
         }
+    }
+
+    private static String obtenerRutaDB() {
+        final String carpeta = System.getenv("APPDATA") + "/AppRenta";
+        new java.io.File(carpeta).mkdirs();
+        return carpeta + "/rentaAutonomos.db";
     }
 }

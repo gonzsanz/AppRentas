@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.apprenta.renta.controller.GastosController"
+      styleClass="view-container" spacing="16">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Gastos" styleClass="view-title" HBox.hgrow="ALWAYS"/>
+        <Button text="+ Nuevo gasto" styleClass="btn-primary" onAction="#nuevoGasto"/>
+    </HBox>
+
+    <!-- FILTROS -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="Desde"/>
+        <DatePicker fx:id="dpDesde" promptText="Fecha inicio"/>
+        <Label text="Hasta"/>
+        <DatePicker fx:id="dpHasta" promptText="Fecha fin"/>
+        <ComboBox fx:id="cbCategoria" promptText="Todas las categorías" prefWidth="180"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="txtBuscar" promptText="Buscar..." prefWidth="180" styleClass="search-field"/>
+        <Button text="Filtrar"  styleClass="btn-secondary" onAction="#filtrar"/>
+        <Button text="Limpiar"  styleClass="btn-ghost"     onAction="#limpiarFiltros"/>
+    </HBox>
+
+    <!-- TABLA FACTURAS RECIBIDAS -->
+    <TableView fx:id="tablaGastos" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="colFecha"      text="Fecha"          prefWidth="100"/>
+            <TableColumn fx:id="colProveedor"  text="Proveedor"      prefWidth="150"/>
+            <TableColumn fx:id="colConcepto"   text="Concepto"       prefWidth="150"/>
+            <TableColumn fx:id="colNaturaleza" text="Categoría"      prefWidth="130"/>
+            <TableColumn fx:id="colBase"       text="Base imponible" prefWidth="120"/>
+            <TableColumn fx:id="colIva"        text="IVA"            prefWidth="80"/>
+            <TableColumn fx:id="colTotal"      text="Total"          prefWidth="100"/>
+        </columns>
+        <placeholder><Label text="No hay gastos registrados"/></placeholder>
+    </TableView>
+
+    <!-- FOOTER -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label fx:id="lblConteo" text="0 gastos" styleClass="footer-count"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Editar"   styleClass="btn-secondary" onAction="#editarGasto"/>
+        <Button text="Eliminar" styleClass="btn-danger"    onAction="#eliminarGasto"/>
+        <Button text="📊 Exportar a Excel" styleClass="btn-ghost" onAction="#exportarExcel"/>
+    </HBox>
+</VBox>
