@@ -26,7 +26,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.*;
-import javafx.scene.control.TableSelectionModel;
 
 public class IngresosController implements Initializable {
 
@@ -175,38 +174,32 @@ public class IngresosController implements Initializable {
                 );
 
         // Totales del mes
-        final BigDecimal monthlyTotalAmount = getMonthlyTotalAmount(rows);
+        final Label monthlyTotalAmountLabel = getMonthlyTotalAmountLabel(month);
+
+        return getCard(title, table, monthlyTotalAmountLabel);
+    }
+
+    private Label getMonthlyTotalAmountLabel(final int month) {
         final Label monthlyTotalAmountLabel = new Label();
         monthlyTotalAmountLabel.getStyleClass().add("label-bold");
         totalLabelsByMonth.put(month, monthlyTotalAmountLabel);
-        return getCard(title, table, monthlyTotalAmountLabel);
+
+        return monthlyTotalAmountLabel;
     }
 
     private static VBox getCard(final Label title, final TableView<IncomeDAO> table, final Label monthlyTotalAmountLabel) {
         final VBox card = new VBox(10, title, table, monthlyTotalAmountLabel);
         card.getStyleClass().add("card");
+
         return card;
     }
 
-    private Label getMonthlyTotalAmountLabel(final int month, final BigDecimal monthlyTotalAmount) {
-        final Label monthlyTotalAmountLabel = new Label("TOTAL " + MONTHS_NAMES[month - 1].toUpperCase() + ": " + numberFormat.format(monthlyTotalAmount));
-        monthlyTotalAmountLabel.getStyleClass().add("label-bold");
-        return monthlyTotalAmountLabel;
-    }
-
-    private static BigDecimal getMonthlyTotalAmount(final ObservableList<IncomeDAO> rows) {
-        return rows.stream()
-                .map(r -> r.total() != null ? r.total() : BigDecimal.ZERO)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     private TableColumn<IncomeDAO, Boolean> getIsCloseColumn() {
-        TableColumn<IncomeDAO, Boolean> isCloseColumn = new TableColumn<>("CERRADO");
+        final TableColumn<IncomeDAO, Boolean> isCloseColumn = new TableColumn<>("CERRADO");
+
         isCloseColumn.setPrefWidth(70);
         isCloseColumn.setSortable(false);
-
-        isCloseColumn.setCellValueFactory(c ->
-                new SimpleBooleanProperty(c.getValue().cerrado()));
+        isCloseColumn.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().cerrado()));
 
         isCloseColumn.setCellFactory(col -> new TableCell<>() {
             private final CheckBox cb = new CheckBox();
@@ -241,117 +234,122 @@ public class IngresosController implements Initializable {
 
     private TableColumn<IncomeDAO, String> getIvaAmountColumn() {
         final TableColumn<IncomeDAO, String> ivaAmountColumn = new TableColumn<>("IVA (21%)");
+
         ivaAmountColumn.setPrefWidth(110);
         ivaAmountColumn.setSortable(false);
 
         ivaAmountColumn.setCellValueFactory(c -> {
-            IncomeDAO row = c.getValue();
-            BigDecimal iva = row.cuotaIva();
+            final IncomeDAO row = c.getValue();
+            final BigDecimal ivaAmount = row.cuotaIva();
 
-            if (row.id() != null && iva != null) {
-                return new SimpleStringProperty(numberFormat.format(iva));
+            if (row.id() != null && ivaAmount != null) {
+                return new SimpleStringProperty(numberFormat.format(ivaAmount));
             }
             return new SimpleStringProperty(
-                    (iva != null && iva.compareTo(BigDecimal.ZERO) > 0) ? numberFormat.format(iva) : "");
+                    (ivaAmount != null && ivaAmount.compareTo(BigDecimal.ZERO) > 0) ? numberFormat.format(ivaAmount) : "");
         });
+
         return ivaAmountColumn;
     }
 
     private TableColumn<IncomeDAO, String> getBaseAmountColumn() {
         final TableColumn<IncomeDAO, String> baseAmountColumn = new TableColumn<>("BASE IMPONIBLE");
+
         baseAmountColumn.setPrefWidth(130);
         baseAmountColumn.setSortable(false);
 
         baseAmountColumn.setCellValueFactory(c -> {
-            IncomeDAO row = c.getValue();
-            BigDecimal b = row.baseImponible();
+            final IncomeDAO row = c.getValue();
+            BigDecimal baseAmount = row.baseImponible();
 
-            if (row.id() != null && b != null) {
-                return new SimpleStringProperty(numberFormat.format(b));
+            if (row.id() != null && baseAmount != null) {
+                return new SimpleStringProperty(numberFormat.format(baseAmount));
             }
 
             return new SimpleStringProperty(
-                    (b != null && b.compareTo(BigDecimal.ZERO) > 0) ? numberFormat.format(b) : "");
+                    (baseAmount != null && baseAmount.compareTo(BigDecimal.ZERO) > 0) ? numberFormat.format(baseAmount) : "");
         });
+
         return baseAmountColumn;
     }
 
     private TableColumn<IncomeDAO, String> getTotalAmountColumn() {
-        TableColumn<IncomeDAO, String> totalAmountColumn = new TableColumn<>("TOTAL (€)");
+        final TableColumn<IncomeDAO, String> totalAmountColumn = new TableColumn<>("TOTAL (€)");
+
         totalAmountColumn.setPrefWidth(110);
         totalAmountColumn.setSortable(false);
 
         totalAmountColumn.setCellValueFactory(c -> {
-            IncomeDAO row = c.getValue();
-            BigDecimal t = row.total();
+            final IncomeDAO row = c.getValue();
+            final BigDecimal totalAmount = row.total();
 
-            if (row.id() != null && t != null) {
-                return new SimpleStringProperty(t.setScale(2, RoundingMode.HALF_UP).toPlainString());
+            if (row.id() != null && totalAmount != null) {
+                return new SimpleStringProperty(totalAmount.setScale(2, RoundingMode.HALF_UP).toPlainString());
             }
 
             return new SimpleStringProperty(
-                    (t != null && t.compareTo(BigDecimal.ZERO) > 0) ? t.toPlainString() : "");
+                    (totalAmount != null && totalAmount.compareTo(BigDecimal.ZERO) > 0) ? totalAmount.toPlainString() : "");
         });
 
         totalAmountColumn.setCellFactory(col -> new TextFieldTableCell<>(new DefaultStringConverter()) {
 
             @Override
             public void startEdit() {
-                IncomeDAO row = getTableRow().getItem();
+                final IncomeDAO row = getTableRow().getItem();
                 if (row != null && row.cerrado()) return;
                 super.startEdit();
                 if (!isEditing()) return;
 
                 javafx.application.Platform.runLater(() -> {
-                    TextField tf = (TextField) getGraphic();
-                    if (tf == null) return;
-                    tf.selectAll();
-                    tf.requestFocus();
+                    final TextField textField = (TextField) getGraphic();
+                    if (textField == null) return;
+                    textField.selectAll();
+                    textField.requestFocus();
 
-                    tf.setOnKeyPressed(e -> {
+                    textField.setOnKeyPressed(e -> {
                         switch (e.getCode()) {
                             case ENTER, TAB -> {
-                                commitEdit(tf.getText());
+                                commitEdit(textField.getText());
                                 e.consume();
                             }
                             case DOWN -> {
-                                String valor = tf.getText();
-                                int filaActual = getTableRow().getIndex();
-                                TableColumn<IncomeDAO, String> col2 = getTableColumn();
-                                TableView<IncomeDAO> tv = getTableView();
-                                commitEdit(valor);
+                                final String value = textField.getText();
+                                final int actualRow = getTableRow().getIndex();
+                                final TableColumn<IncomeDAO, String> col2 = getTableColumn();
+                                final TableView<IncomeDAO> tableView = getTableView();
+                                commitEdit(value);
                                 javafx.application.Platform.runLater(() -> {
-                                    int siguiente = filaActual + 1;
-                                    while (siguiente < tv.getItems().size()
-                                            && tv.getItems().get(siguiente).cerrado()) {
-                                        siguiente++;
+                                    int next = actualRow + 1;
+                                    while (next < tableView.getItems().size()
+                                            && tableView.getItems().get(next).cerrado()) {
+                                        next++;
                                     }
-                                    if (siguiente < tv.getItems().size()) {
-                                        tv.getSelectionModel().clearAndSelect(siguiente, col2);
-                                        tv.getFocusModel().focus(siguiente, col2);
-                                        tv.scrollTo(siguiente);
-                                        tv.edit(siguiente, col2);
+                                    if (next < tableView.getItems().size()) {
+                                        tableView.getSelectionModel().clearAndSelect(next, col2);
+                                        tableView.getFocusModel().focus(next, col2);
+                                        tableView.scrollTo(next);
+                                        tableView.edit(next, col2);
                                     }
                                 });
                                 e.consume();
                             }
                             case UP -> {
-                                String valor = tf.getText();
-                                int filaActual = getTableRow().getIndex();
-                                TableColumn<IncomeDAO, String> col2 = getTableColumn();
-                                TableView<IncomeDAO> tv = getTableView();
-                                commitEdit(valor);
+                                final String value = textField.getText();
+                                final int actualRow = getTableRow().getIndex();
+                                final TableColumn<IncomeDAO, String> col2 = getTableColumn();
+                                final TableView<IncomeDAO> tableView = getTableView();
+                                commitEdit(value);
                                 javafx.application.Platform.runLater(() -> {
-                                    int anterior = filaActual - 1;
-                                    while (anterior >= 0
-                                            && tv.getItems().get(anterior).cerrado()) {
-                                        anterior--;
+                                    int previous = actualRow - 1;
+                                    while (previous >= 0
+                                            && tableView.getItems().get(previous).cerrado()) {
+                                        previous--;
                                     }
-                                    if (anterior >= 0) {
-                                        tv.getSelectionModel().clearAndSelect(anterior, col2);
-                                        tv.getFocusModel().focus(anterior, col2);
-                                        tv.scrollTo(anterior);
-                                        tv.edit(anterior, col2);
+                                    if (previous >= 0) {
+                                        tableView.getSelectionModel().clearAndSelect(previous, col2);
+                                        tableView.getFocusModel().focus(previous, col2);
+                                        tableView.scrollTo(previous);
+                                        tableView.edit(previous, col2);
                                     }
                                 });
                                 e.consume();
@@ -368,16 +366,16 @@ public class IngresosController implements Initializable {
 
             @Override
             public void cancelEdit() {
-                TextField tf = (TextField) getGraphic();
-                if (tf != null) {
-                    commitEdit(tf.getText());
+                final TextField textField = (TextField) getGraphic();
+                if (textField != null) {
+                    commitEdit(textField.getText());
                 } else {
                     super.cancelEdit();
                 }
             }
 
             @Override
-            public void updateItem(String item, boolean empty) {
+            public void updateItem(final String item, final boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setText(null);
@@ -389,7 +387,7 @@ public class IngresosController implements Initializable {
         });
 
         totalAmountColumn.setOnEditCommit(e -> {
-            IncomeDAO row = e.getRowValue();
+            final IncomeDAO row = e.getRowValue();
             if (row != null) {
                 guardarTotal(row, e.getNewValue());
             }
@@ -400,20 +398,25 @@ public class IngresosController implements Initializable {
 
     private static TableColumn<IncomeDAO, String> getInvoiceNumberColumn() {
         final TableColumn<IncomeDAO, String> invoiceNumberColumn = new TableColumn<>("Nº FACTURA");
+
         invoiceNumberColumn.setPrefWidth(90);
         invoiceNumberColumn.setSortable(false);
         invoiceNumberColumn.setStyle("-fx-alignment: CENTER;");
+
         invoiceNumberColumn.setCellValueFactory(c -> {
-            Integer n = c.getValue().numFactura();
-            return new SimpleStringProperty(n != null ? String.valueOf(n) : "");
+            final Integer invoiceNumber = c.getValue().numFactura();
+            return new SimpleStringProperty(invoiceNumber != null ? String.valueOf(invoiceNumber) : "");
         });
+
         return invoiceNumberColumn;
     }
 
     private static TableColumn<IncomeDAO, String> getDateColumn() {
         final TableColumn<IncomeDAO, String> dateColumn = new TableColumn<>("DÍA");
+
         dateColumn.setPrefWidth(130);
         dateColumn.setSortable(false);
+
         dateColumn.setCellValueFactory(c -> {
             final LocalDate f = c.getValue().fecha();
             String day = f.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("es", "ES")).toUpperCase();
@@ -422,13 +425,13 @@ public class IngresosController implements Initializable {
         });
         dateColumn.setCellFactory(col -> new TableCell<>() {
             @Override
-            protected void updateItem(String item, boolean empty) {
+            protected void updateItem(final String item, final boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty ? null : item);
                 if (!empty && getTableRow() != null && getTableRow().getItem() != null) {
-                    DayOfWeek dow = getTableRow().getItem().fecha().getDayOfWeek();
+                    final DayOfWeek dayOfWeek = getTableRow().getItem().fecha().getDayOfWeek();
                     // Solo colorear fines de semana, lo de cerrado ya lo hace el rowFactory
-                    if (dow == DayOfWeek.SUNDAY || dow == DayOfWeek.SATURDAY) {
+                    if (dayOfWeek == DayOfWeek.SUNDAY || dayOfWeek == DayOfWeek.SATURDAY) {
                         setStyle("-fx-text-fill: #9ca3af; -fx-font-style: italic;");
                     } else {
                         setStyle("");
@@ -436,16 +439,20 @@ public class IngresosController implements Initializable {
                 }
             }
         });
+
         return dateColumn;
     }
 
     private static TableColumn<IncomeDAO, String> getDayColumn() {
         final TableColumn<IncomeDAO, String> dayColumn = new TableColumn<>("#");
+
         dayColumn.setPrefWidth(40);
         dayColumn.setSortable(false);
+        dayColumn.setStyle("-fx-alignment: CENTER;");
+
         dayColumn.setCellValueFactory(c ->
                 new SimpleStringProperty(String.valueOf(c.getValue().fecha().getDayOfMonth())));
-        dayColumn.setStyle("-fx-alignment: CENTER;");
+
         return dayColumn;
     }
 
@@ -456,7 +463,7 @@ public class IngresosController implements Initializable {
             TableView.TableViewSelectionModel<IncomeDAO> sm = table.getSelectionModel();
             TablePosition<IncomeDAO, ?> pos = sm.getSelectedCells().isEmpty() ? null : sm.getSelectedCells().get(0);
             if (pos == null) return;
-            IncomeDAO item = table.getItems().get(pos.getRow());
+            final IncomeDAO item = table.getItems().get(pos.getRow());
             if (item == null || item.cerrado()) return;
             // Solo abrir si la columna es la de TOTAL (índice 4)
             if (pos.getColumn() == 4 && table.getEditingCell() == null) {
@@ -479,16 +486,17 @@ public class IngresosController implements Initializable {
 
         table.setEditable(true);
         table.getSelectionModel().setCellSelectionEnabled(true);
-
         table.setFixedCellSize(28);
         table.setPrefHeight(table.getFixedCellSize() * rows.size() + 30);
         table.getStyleClass().add("data-table");
+
         return table;
     }
 
     private Label getTitleLabel(final int mes) {
         final Label title = new Label(MONTHS_NAMES[mes - 1].toUpperCase() + " " + year);
         title.getStyleClass().add("card-title");
+
         return title;
     }
 
@@ -513,7 +521,7 @@ public class IngresosController implements Initializable {
                     && (textValue == null || textValue.trim().isEmpty())) {
                 incomeService.deleteIncome(row.id());
                 for (ObservableList<IncomeDAO> monthRows : rowsByMonth) {
-                    int index = monthRows.indexOf(row);
+                    final int index = monthRows.indexOf(row);
                     if (index != -1) {
                         monthRows.set(index, emptyRow(row.fecha()));
                         dbData.remove(row.fecha());
@@ -525,13 +533,16 @@ public class IngresosController implements Initializable {
             }
 
             // A partir de aquí: el usuario escribió algo (0 o positivo)
-            BigDecimal baseAmount = total.compareTo(BigDecimal.ZERO) > 0
+            final BigDecimal baseAmount = total.compareTo(BigDecimal.ZERO) > 0
                     ? total.divide(new BigDecimal("1.21"), 2, RoundingMode.HALF_UP)
                     : BigDecimal.ZERO;
-            BigDecimal ivaAmount = total.subtract(baseAmount).setScale(2, RoundingMode.HALF_UP);
-            Integer invoiceNumber = row.numFactura() != null
+
+            final BigDecimal ivaAmount = total.subtract(baseAmount).setScale(2, RoundingMode.HALF_UP);
+
+            final Integer invoiceNumber = row.numFactura() != null
                     ? row.numFactura()
                     : incomeService.nextInvoiceNumber(year);
+
             final IncomeDAO updatedIncome = row.toBuilder()
                     .total(total)
                     .baseImponible(baseAmount)
@@ -551,9 +562,10 @@ public class IngresosController implements Initializable {
     // En IngresosController.java
     private void toggleCerrado(final IncomeDAO row, final boolean isClose) throws SQLException {
         final IncomeDAO updatedIncome;
+
         if (isClose) {
             updatedIncome = row.toBuilder()
-                    .id(row.id()) // <--- Asegúrate de pasar el ID
+                    .id(row.id())
                     .cerrado(true)
                     .total(BigDecimal.ZERO)
                     .baseImponible(BigDecimal.ZERO)
@@ -562,9 +574,8 @@ public class IngresosController implements Initializable {
                     .build();
         } else {
             updatedIncome = row.toBuilder()
-                    .id(row.id()) // <--- Asegúrate de pasar el ID
+                    .id(row.id())
                     .cerrado(false)
-                    // Aquí podrías querer mantener los valores anteriores o dejarlos en cero
                     .build();
         }
         persistir(row, updatedIncome);
@@ -572,8 +583,8 @@ public class IngresosController implements Initializable {
 
     private void persistir(final IncomeDAO previous, final IncomeDAO updated) {
         try {
-            for (ObservableList<IncomeDAO> monthRows : rowsByMonth) {
-                int index = monthRows.indexOf(previous);
+            for (final ObservableList<IncomeDAO> monthRows : rowsByMonth) {
+                final int index = monthRows.indexOf(previous);
                 if (index != -1) {
                     if (previous.id() == null) {
                         // Guardar y obtener el ID generado
@@ -612,25 +623,25 @@ public class IngresosController implements Initializable {
     private void updateTotalAmounts() {
         BigDecimal totalAmount = BigDecimal.ZERO, baseAmount = BigDecimal.ZERO, ivaAmount = BigDecimal.ZERO;
 
-        int starterMonth = (quarter - 1) * 3 + 1;
+        final int starterMonth = (quarter - 1) * 3 + 1;
         for (int i = 0; i < rowsByMonth.size(); i++) {
-            int month = starterMonth + i;
-            ObservableList<IncomeDAO> rows = rowsByMonth.get(i);
+            final int month = starterMonth + i;
+            final ObservableList<IncomeDAO> rows = rowsByMonth.get(i);
 
             BigDecimal monthTotal = BigDecimal.ZERO;
             for (var incomeRow : rows) {
-                BigDecimal t = incomeRow.total() != null ? incomeRow.total() : BigDecimal.ZERO;
-                BigDecimal b = incomeRow.baseImponible() != null ? incomeRow.baseImponible() : BigDecimal.ZERO;
+                final BigDecimal total = incomeRow.total() != null ? incomeRow.total() : BigDecimal.ZERO;
+                BigDecimal base = incomeRow.baseImponible() != null ? incomeRow.baseImponible() : BigDecimal.ZERO;
                 BigDecimal iva = incomeRow.cuotaIva() != null ? incomeRow.cuotaIva() : BigDecimal.ZERO;
-                totalAmount = totalAmount.add(t);
-                baseAmount = baseAmount.add(b);
+                totalAmount = totalAmount.add(total);
+                baseAmount = baseAmount.add(base);
                 ivaAmount = ivaAmount.add(iva);
-                monthTotal = monthTotal.add(t);
+                monthTotal = monthTotal.add(total);
             }
 
-            Label lbl = totalLabelsByMonth.get(month);
-            if (lbl != null) {
-                lbl.setText("TOTAL " + MONTHS_NAMES[month - 1].toUpperCase() + ": " + numberFormat.format(monthTotal));
+            final Label label = totalLabelsByMonth.get(month);
+            if (label != null) {
+                label.setText("TOTAL " + MONTHS_NAMES[month - 1].toUpperCase() + ": " + numberFormat.format(monthTotal));
             }
         }
 
