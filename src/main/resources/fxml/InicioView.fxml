@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.apprenta.renta.controller.InicioController"
+      styleClass="view-container" spacing="20">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label text="Inicio" styleClass="view-title"/>
+        <VBox.margin><Insets bottom="0"/></VBox.margin>
+    </HBox>
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label fx:id="lblTrimestre" text="1º Trimestre 2025 (Ene - Mar)" styleClass="view-subtitle"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Cambiar trimestre" styleClass="btn-secondary" onAction="#cambiarTrimestre"/>
+    </HBox>
+
+    <!-- RESUMEN IVA -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="Resumen del trimestre" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="IVA Repercutido" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblIvaRepercutido" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <HBox styleClass="summary-row">
+            <Label text="IVA Soportado (Deducible)" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblIvaSoportado" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Resultado IVA (Modelo 303)" HBox.hgrow="ALWAYS" styleClass="label-bold"/>
+            <Label fx:id="lblResultadoIva" text="0,00 €" styleClass="amount-highlight"/>
+        </HBox>
+    </VBox>
+
+    <!-- RESUMEN IRPF -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="Rendimiento (Modelo 130)" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Ingresos" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblIngresos" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <HBox styleClass="summary-row">
+            <Label text="Gastos deducibles" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblGastos" text="0,00 €" styleClass="amount-negative"/>
+        </HBox>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Beneficio" HBox.hgrow="ALWAYS" styleClass="label-bold"/>
+            <Label fx:id="lblBeneficio" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <HBox styleClass="summary-row">
+            <Label text="Pago fraccionado (20%)" HBox.hgrow="ALWAYS" styleClass="label-bold"/>
+            <Label fx:id="lblPagoFraccionado" text="0,00 €" styleClass="amount-highlight"/>
+        </HBox>
+    </VBox>
+</VBox>

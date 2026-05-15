@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.apprenta.renta.controller.Modelo130Controller"
+      styleClass="view-container" spacing="20">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <Label text="Modelo 130 (IRPF)" styleClass="view-title"/>
+    <Label fx:id="lblTrimestre" text="1º Trimestre 2025 (Ene - Mar)" styleClass="view-subtitle"/>
+
+    <!-- RENDIMIENTO -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="Rendimiento del trimestre" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Ingresos" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblIngresos" text="0,00 €" styleClass="amount"/>
+        </HBox>
+        <HBox styleClass="summary-row">
+            <Label text="Gastos deducibles" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblGastos" text="0,00 €" styleClass="amount-negative"/>
+        </HBox>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label text="Beneficio" HBox.hgrow="ALWAYS" styleClass="label-bold"/>
+            <Label fx:id="lblBeneficio" text="0,00 €" styleClass="amount"/>
+        </HBox>
+    </VBox>
+
+    <!-- PAGO FRACCIONADO -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="Pago fraccionado (20%)" styleClass="card-title"/>
+        <Separator/>
+        <HBox styleClass="summary-row">
+            <Label fx:id="lblPagoDesc" text="20% de 0,00 €" HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblPago" text="0,00 €" styleClass="amount-highlight"/>
+        </HBox>
+    </VBox>
+
+    <!-- AVISO -->
+    <VBox styleClass="card-info" spacing="8">
+        <Label text="Información" styleClass="card-title-info"/>
+        <Label text="Este resultado es orientativo. Revisa las casillas del modelo oficial antes de presentar."
+               styleClass="label-info" wrapText="true"/>
+    </VBox>
+
+    <HBox spacing="12">
+        <Button text="Ver detalle" styleClass="btn-secondary" onAction="#verDetalle"/>
+        <Button text="📊 Exportar a Excel" styleClass="btn-ghost" onAction="#exportarExcel"/>
+    </HBox>
+</VBox>
