@@ -11,6 +11,8 @@
     <!-- HEADER -->
     <HBox alignment="CENTER_LEFT">
         <Label text="Gastos" styleClass="view-title" HBox.hgrow="ALWAYS"/>
+    </HBox>
+    <HBox alignment="CENTER_LEFT">
         <Button text="+ Nuevo gasto" styleClass="btn-primary" onAction="#nuevoGasto"/>
     </HBox>
 

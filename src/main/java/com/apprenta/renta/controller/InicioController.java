@@ -45,8 +45,8 @@ public class InicioController implements Initializable {
             var otherRepo   = new OtherExpenseRepository();
 
             QuarterlySummary resumen = new QuarterlySummary(trimestre, anio);
-            resumen.setVentasBase(incomeRepo.sumarBasePorTrimestre(anio, trimestre));
-            resumen.setVentasCuotaIva(incomeRepo.sumarCuotaIvaPorTrimestre(anio, trimestre));
+            resumen.setVentasBase(incomeRepo.calculateBaseByQuarter(anio, trimestre));
+            resumen.setVentasCuotaIva(incomeRepo.calculateIvaQuotaByQuarter(anio, trimestre));
             resumen.setComprasBase(expenseRepo.sumarBasePorTrimestre(anio, trimestre));
             resumen.setComprasCuotaIva(expenseRepo.sumarCuotaIvaPorTrimestre(anio, trimestre));
             resumen.setOtrosGastos(otherRepo.sumarPorTrimestre(anio, trimestre));

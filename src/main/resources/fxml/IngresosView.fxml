@@ -2,7 +2,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.cell.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.apprenta.renta.controller.IngresosController"
@@ -10,42 +9,31 @@
     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
     <!-- HEADER -->
-    <HBox alignment="CENTER_LEFT">
-        <Label text="Ingresos" styleClass="view-title" HBox.hgrow="ALWAYS"/>
-        <Button text="+ Nuevo ingreso" styleClass="btn-primary" onAction="#nuevoIngreso"/>
-    </HBox>
-
-    <!-- FILTROS -->
-    <HBox spacing="12" alignment="CENTER_LEFT">
-        <Label text="Desde"/>
-        <DatePicker fx:id="dpDesde" promptText="Fecha inicio"/>
-        <Label text="Hasta"/>
-        <DatePicker fx:id="dpHasta" promptText="Fecha fin"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <TextField fx:id="txtBuscar" promptText="Buscar..." prefWidth="180" styleClass="search-field"/>
-        <Button text="Filtrar" styleClass="btn-secondary" onAction="#filtrar"/>
-        <Button text="Limpiar" styleClass="btn-ghost" onAction="#limpiarFiltros"/>
-    </HBox>
-
-    <!-- TABLA -->
-    <TableView fx:id="tablaIngresos" VBox.vgrow="ALWAYS" styleClass="data-table">
-        <columns>
-            <TableColumn fx:id="colFecha"         text="Fecha"          prefWidth="100"/>
-            <TableColumn fx:id="colNumFactura"    text="Nº Factura"     prefWidth="100"/>
-            <TableColumn fx:id="colTotal"         text="Total"          prefWidth="120"/>
-            <TableColumn fx:id="colBaseImponible" text="Base imponible" prefWidth="140"/>
-            <TableColumn fx:id="colCuotaIva"      text="IVA"            prefWidth="110"/>
-            <TableColumn fx:id="colCerrado"       text="Cerrado"        prefWidth="80"/>
-        </columns>
-        <placeholder><Label text="No hay ingresos registrados"/></placeholder>
-    </TableView>
-
-    <!-- FOOTER -->
     <HBox alignment="CENTER_LEFT" spacing="16">
-        <Label fx:id="lblConteo" text="0 ingresos" styleClass="footer-count"/>
+        <Label text="Ingresos" styleClass="view-title" HBox.hgrow="ALWAYS"/>
+    </HBox>
+    <HBox alignment="CENTER_LEFT">
+        <ComboBox fx:id="cbQuarterYear" prefWidth="140" onAction="#selectYearCombo"/>
+        <ComboBox fx:id="cbQuarter" prefWidth="140" onAction="#selectQuarterCombo"/>
+    </HBox>
+
+    <!-- TRES MESES -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-transparent">
+        <VBox fx:id="monthContainer" spacing="24">
+            <padding><Insets top="4" bottom="16"/></padding>
+        </VBox>
+    </ScrollPane>
+
+    <!-- FOOTER TOTALES -->
+    <HBox alignment="CENTER_LEFT" spacing="24" styleClass="card">
+        <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
+        <Label text="TOTAL TRIMESTRE:" styleClass="label-bold"/>
+        <Label fx:id="totalAmountQuarterLabel" text="0,00 €" styleClass="amount"/>
+        <Label text="BASE:" styleClass="label-bold"/>
+        <Label fx:id="baseAmountQuarterLabel" text="0,00 €" styleClass="amount"/>
+        <Label text="IVA:" styleClass="label-bold"/>
+        <Label fx:id="ivaAmountQuarterLabel" text="0,00 €" styleClass="amount-highlight"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button text="Editar"   styleClass="btn-secondary" onAction="#editarIngreso"/>
-        <Button text="Eliminar" styleClass="btn-danger"    onAction="#eliminarIngreso"/>
         <Button text="📊 Exportar a Excel" styleClass="btn-ghost" onAction="#exportarExcel"/>
     </HBox>
 </VBox>

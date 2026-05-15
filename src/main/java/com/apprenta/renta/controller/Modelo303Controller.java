@@ -3,7 +3,6 @@ package com.apprenta.renta.controller;
 import com.apprenta.renta.model.QuarterlySummary;
 import com.apprenta.renta.repository.ExpenseRepository;
 import com.apprenta.renta.repository.IncomeRepository;
-import com.apprenta.renta.repository.OtherExpenseRepository;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -39,8 +38,8 @@ public class Modelo303Controller implements Initializable {
             var expenseRepo = new ExpenseRepository();
 
             QuarterlySummary r = new QuarterlySummary(trimestre, anio);
-            r.setVentasBase(incomeRepo.sumarBasePorTrimestre(anio, trimestre));
-            r.setVentasCuotaIva(incomeRepo.sumarCuotaIvaPorTrimestre(anio, trimestre));
+            r.setVentasBase(incomeRepo.calculateBaseByQuarter(anio, trimestre));
+            r.setVentasCuotaIva(incomeRepo.calculateIvaQuotaByQuarter(anio, trimestre));
             r.setComprasBase(expenseRepo.sumarBasePorTrimestre(anio, trimestre));
             r.setComprasCuotaIva(expenseRepo.sumarCuotaIvaPorTrimestre(anio, trimestre));
 

@@ -1,4 +1,4 @@
-package com.apprenta.renta.model.db;
+package com.apprenta.renta.model.dao;
 
 import lombok.Builder;
 
