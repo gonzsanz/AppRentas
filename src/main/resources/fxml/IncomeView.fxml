@@ -4,7 +4,7 @@
 <?import javafx.geometry.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.apprenta.renta.controller.IngresosController"
+      fx:controller="com.apprenta.renta.controller.IncomeController"
       styleClass="view-container" spacing="16">
     <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
 
