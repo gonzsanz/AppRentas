@@ -1,7 +1,7 @@
 package com.apprenta.renta.controller;
 
 import com.apprenta.renta.model.Income;
-import com.apprenta.renta.model.db.IncomeDAO;
+import com.apprenta.renta.model.dao.IncomeDAO;
 import com.apprenta.renta.service.IncomeService;
 import com.apprenta.renta.service.IncomeServiceImpl;
 import com.apprenta.renta.repository.IncomeRepository;

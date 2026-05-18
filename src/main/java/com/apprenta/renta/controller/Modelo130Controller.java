@@ -40,7 +40,7 @@ public class Modelo130Controller implements Initializable {
             var otherRepo   = new OtherExpenseRepository();
 
             QuarterlySummary r = new QuarterlySummary(trimestre, anio);
-            r.setVentasBase(incomeRepo.sumarBasePorTrimestre(anio, trimestre));
+            r.setVentasBase(incomeRepo.calculateBaseByQuarter(anio, trimestre));
             r.setComprasBase(expenseRepo.sumarBasePorTrimestre(anio, trimestre));
             r.setOtrosGastos(otherRepo.sumarPorTrimestre(anio, trimestre));
 

@@ -19,7 +19,6 @@ public class MainController implements Initializable {
     @FXML private Button btnGastos;
     @FXML private Button btnModelo303;
     @FXML private Button btnModelo130;
-    @FXML private Label lblBBDD;
 
     private Button activeBtn;
 
@@ -35,7 +34,7 @@ public class MainController implements Initializable {
     }
 
     @FXML private void navegarIngresos() {
-        cargarVista("/fxml/IngresosView.fxml");
+        cargarVista("/fxml/IncomeView.fxml");
         setActive(btnIngresos);
     }
 

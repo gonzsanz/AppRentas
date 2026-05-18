@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.apprenta.renta.controller.IncomeController"
+      styleClass="view-container" spacing="16">
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT" spacing="16">
+        <Label text="Ingresos" styleClass="view-title" HBox.hgrow="ALWAYS"/>
+    </HBox>
+    <HBox alignment="CENTER_LEFT">
+        <ComboBox fx:id="cbQuarterYear" prefWidth="140" onAction="#selectYearCombo"/>
+        <ComboBox fx:id="cbQuarter" prefWidth="140" onAction="#selectQuarterCombo"/>
+    </HBox>
+
+    <!-- TRES MESES -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-transparent">
+        <VBox fx:id="monthContainer" spacing="24">
+            <padding><Insets top="4" bottom="16"/></padding>
+        </VBox>
+    </ScrollPane>
+
+    <!-- FOOTER TOTALES -->
+    <HBox alignment="CENTER_LEFT" spacing="24" styleClass="card">
+        <padding><Insets top="10" bottom="10" left="16" right="16"/></padding>
+        <Label text="TOTAL TRIMESTRE:" styleClass="label-bold"/>
+        <Label fx:id="totalAmountQuarterLabel" text="0,00 €" styleClass="amount"/>
+        <Label text="BASE:" styleClass="label-bold"/>
+        <Label fx:id="baseAmountQuarterLabel" text="0,00 €" styleClass="amount"/>
+        <Label text="IVA:" styleClass="label-bold"/>
+        <Label fx:id="ivaAmountQuarterLabel" text="0,00 €" styleClass="amount-highlight"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="📊 Exportar a Excel" styleClass="btn-ghost" onAction="#exportarExcel"/>
+    </HBox>
+</VBox>
